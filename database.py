@@ -16,6 +16,10 @@ class Database:
     def cursor(self):
         return self._conn.cursor()
     
+    @property
+    def conn(self):
+        return self._conn
+    
     def destroy(self):
         self._conn.close()
 
