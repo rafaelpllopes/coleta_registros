@@ -1,4 +1,5 @@
 #! python3
+# -*- coding: utf-8 -*-
 from selenium.webdriver import Firefox, FirefoxProfile
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver import Remote
@@ -24,7 +25,7 @@ class ColetarRegistros(ABC):
                 - senha: do usuario para logar
         """
         self.__browser = browser
-        self.__wdw = WebDriverWait(self.browser, 60)
+        self.__wdw = WebDriverWait(self.browser, 120)
         self.__url = url
         self.__usuario = usuario
         self.__senha = senha
@@ -224,12 +225,12 @@ class FirefoxColeta(ColetarRegistros):
         
         # Instanciar o navegar firefox e inserir as configurações
         
-        # browser = Remote(
-        #     # command_executor= 'http://127.0.0.1:4444/wd/hub',
-        #     desired_capabilities= DesiredCapabilities.FIREFOX,
-        #     browser_profile= profile
-        # )
-        browser = Firefox(profile)
+        browser = Remote(
+            # command_executor= 'http://127.0.0.1:4444/wd/hub',
+            desired_capabilities= DesiredCapabilities.FIREFOX,
+            browser_profile= profile
+        )
+        # browser = Firefox(profile)
         
         # Maximizar a tela do navegador
         browser.maximize_window()    
@@ -247,5 +248,4 @@ class ChromeColeta(ColetarRegistros):
         options.add_argument('--ignore-certificate-errors')
         options.add_argument("--start-maximized")
         browser = Chrome(options=options)
-        browser.implicitly_wait(30)
         super().__init__(url, usuario, senha, browser)
