@@ -76,7 +76,7 @@ class ColetarRegistros(ABC):
         while terminou:
             tentativas += 1
             terminou = self.__verifica_termino_download()
-            if tentativas >= 60:
+            if tentativas >= 120:
                 break
 
     def coleta_registros_registrador_henry(self):
