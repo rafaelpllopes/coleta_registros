@@ -14,6 +14,8 @@ from time import sleep
 from abc import ABC
 import os
 
+DIRETORIO = "/home/info/Dev/converte_comunica_ponto"
+
 class ColetarRegistros(ABC):
     def __init__(self, url, usuario, senha, browser):
         """
@@ -66,7 +68,7 @@ class ColetarRegistros(ABC):
     
     def __verifica_termino_download(self):
         sleep(1)        
-        arq = os.listdir("/home/info/Dev/converte_comunica_ponto")
+        arq = os.listdir(DIRETORIO)
         return "*.part" in arq or "*.crdownload" in arq
     
     def __terminou_download(self):
@@ -215,8 +217,7 @@ class FirefoxColeta(ColetarRegistros):
         profile.set_preference("browser.download.folderList", 2)
         profile.set_preference(
             'browser.download.manager.showWhenStarting', False)
-        profile.set_preference("browser.download.dir",
-                               "/home/info/Dev/converte_comunica_ponto")
+        profile.set_preference("browser.download.dir", DIRETORIO)
         profile.set_preference("browser.helperApps.neverAsk.saveToDisk",
                                "text/plain, application/octet-stream, application/binary,\
                                text/csv, application/csv, application/excel, text/comma-separated-values,\
@@ -238,11 +239,10 @@ class FirefoxColeta(ColetarRegistros):
         # Inserir os atributos para classe pai com uma instancia do navegador
         super().__init__(url, usuario, senha, browser)
 
-
 class ChromeColeta(ColetarRegistros):
     def __init__(self, url, usuario, senha):
         options = ChromeOptions()
-        preferecias = {'download.default_directory': '/home/info/Dev/converte_comunica_ponto',
+        preferecias = {'download.default_directory': DIRETORIO,
                        'safebrowsing.enabled': 'false'}
         options.add_experimental_option('prefs', preferecias)
         options.add_argument('--ignore-certificate-errors')

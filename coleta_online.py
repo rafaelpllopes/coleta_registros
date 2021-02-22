@@ -1,8 +1,10 @@
 #! python3
 # -*- coding: utf-8 -*-
 from coleta_registros import FirefoxColeta, ChromeColeta
+from inserir_db import InserirDB
 from json import load
 import subprocess
+from datetime import date
 
 def coletar(registradores):
     mensagem = ''
@@ -29,9 +31,18 @@ def coletar(registradores):
                 coletar.coleta_registros_registrador_controlId()
             
             mensagem += "OK"
+            
+            # inserir = InserirDB(registrador['rep'], registrador['codigo_db'])
+            
+            # data_atual = date.today()
+            # mes = str(data_atual.month()).zfill(2)
+            # ano = str(data_atual.year())
+            
+            # inserir.inserir_registros(mes, ano)
+            
         except Exception as erros:
             mensagem += f'{erros}'
-        
+                   
         print(mensagem)
 
 def main():
@@ -42,7 +53,6 @@ def main():
         registradores = load(arquivo)
 
     coletar(registradores)
-
 
 if __name__ == '__main__':
     main()

@@ -22,6 +22,10 @@ class Database:
     
     def destroy(self):
         self._conn.close()
+        
+    def __del__(self):
+        self.cursor.close()
+        self.conn.close()
 
 if __name__ == "__main__":
     pass
