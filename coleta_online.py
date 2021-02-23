@@ -15,7 +15,7 @@ def coletar(registradores):
         mensagem = f"Coletado os registros da unidade {registrador['local']}, ip {registrador['ip']}: "
     
         if registrador['ip']:
-            ping = subprocess.run(["ping", "-c", "3", f"{registrador['ip']}"], stdout=subprocess.PIPE)
+            ping = subprocess.run(["ping", "-c", "1", f"{registrador['ip']}"], stdout=subprocess.PIPE)
             resposta = ping.stdout.decode('UTF-8') if ping.returncode == 0 else ''
             if not resposta:
                 continue
