@@ -13,6 +13,7 @@ services:
             - NODE_MAX_INSTANCES=5
         volumes:
             - /home/info/Dev/converte_comunica_ponto:/home/info/Dev/converte_comunica_ponto
+            - /home/info/Dev/coleta_online/downloads:/home/info/Dev/coleta_online/downloads
     chrome:
         image: selenium/node-chrome:3.141.59
         environment: 
@@ -20,3 +21,4 @@ services:
             - NODE_MAX_INSTANCES=5
         volumes:
             - /home/info/Dev/converte_comunica_ponto:/home/info/Dev/converte_comunica_ponto
+            - /home/info/Dev/coleta_online/downloads:/home/info/Dev/coleta_online/downloads

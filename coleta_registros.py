@@ -14,7 +14,7 @@ from time import sleep
 from abc import ABC
 import os
 
-DIRETORIO = "/home/info/Dev/converte_comunica_ponto"
+DIRETORIO = "/home/info/Dev/coleta_online/downloads"
 
 class ColetarRegistros(ABC):
     def __init__(self, url, usuario, senha, browser):

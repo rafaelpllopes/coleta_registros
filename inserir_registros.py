@@ -3,6 +3,7 @@
 from json import load
 from datetime import date
 from inserir_db import InserirDB
+from helpers.remove_files import RemoveFiles
 
 def registradores():
     registradores = []
@@ -20,12 +21,14 @@ def main():
             inserir = InserirDB(rep, ponto)
             
             data_atual = date.today()
-            mes = data_atual.month()
-            ano = data_atual.year()
+            mes = str(data_atual.month).zfill(2)
+            ano = str(data_atual.year)
             
             inserir.inserir_registros(mes, ano)
         except Exception as error:
             print(error)
+    
+    RemoveFiles.remove_all()
     
 if __name__ == '__main__':
     main()

@@ -1,7 +1,8 @@
 #! python3
 # -*- coding: utf-8 -*-
 import re
-from os import listdir, remove
+from os import listdir
+from helpers.remove_files import RemoveFiles
 from dao import RegistradosDAO
 
 class InserirDB:
@@ -64,8 +65,8 @@ class InserirDB:
                     
                     for registro in registros:
                         registros_inserir.append((self.ponto, servidor['matricula'], f"{registro[2]}-{registro[1]}-{registro[0]} {registro[3]}:{registro[4]}"))
-        # Remover arquivo
-        remove(f'downloads/{nome_arquivo_rep}')
+                        
+        RemoveFiles.remove_one(nome_arquivo_rep)
         
         return registros_inserir
     
@@ -80,12 +81,15 @@ class InserirDB:
         return nome_arquivo
         
     def inserir_registros(self, mes, ano):
+        
         registros = self._filtrar_registros(mes, ano)
         if registros:
             self.dao.inserir_registros(registros)
             print(f"Registros {self.rep} inseridos com sucesso.")
         else:
             print(f"Não há registros para serem inseridos do registrador {self.rep}")
+            
+        
 
 if __name__ == '__main__':
     pass
