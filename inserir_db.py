@@ -40,8 +40,10 @@ class InserirDB:
         return resultados
         
     def _filtrar_registros(self, mes, ano):
+        print("Filtrando os registros")
         registros_inserir = []
         nome_arquivo_rep = self._nome_arquivo(self.rep)
+        registro_existentes = self.dao.obter_registro_por_ponto_mes_ano(self.ponto, mes, ano)
         
         if not nome_arquivo_rep:
             print(f"{self.rep} não esta na pasta.")
@@ -50,10 +52,8 @@ class InserirDB:
         with open(f'downloads/{nome_arquivo_rep}') as arquivo:
             rep = arquivo.read()
             for servidor in self.servidores:
-                registros = re.findall(r'(?:\d{10})(\d{2})(%s)(%s)(\d{2})(\d{2})(%s)(?:.{4})' % (mes, ano, servidor['pis']), rep)
-                registro_existentes = []                
+                registros = re.findall(r'(?:\d{10})(\d{2})(%s)(%s)(\d{2})(\d{2})(%s)(?:.{4})' % (mes, ano, servidor['pis']), rep)               
                 if registros:
-                    registro_existentes = self.dao.verifica_existencia_registro(servidor['matricula'], mes, ano)
                     if registro_existentes:
                         for reg in registro_existentes:
                             data = reg['registro'].split(' ')
@@ -87,9 +87,7 @@ class InserirDB:
             self.dao.inserir_registros(registros)
             print(f"Registros {self.rep} inseridos com sucesso.")
         else:
-            print(f"Não há registros para serem inseridos do registrador {self.rep}")
-            
-        
+            print(f"Não há registros para serem inseridos do registrador {self.rep}")       
 
 if __name__ == '__main__':
     pass
