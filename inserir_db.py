@@ -40,15 +40,16 @@ class InserirDB:
         return resultados
         
     def _filtrar_registros(self, mes, ano):
-        print("Filtrando os registros")
         registros_inserir = []
         nome_arquivo_rep = self._nome_arquivo(self.rep)
+        print(nome_arquivo_rep)
         registro_existentes = self.dao.obter_registro_por_ponto_mes_ano(self.ponto, mes, ano)
         
         if not nome_arquivo_rep:
             print(f"{self.rep} não esta na pasta.")
             return
         
+        print("Filtrando os registros")
         with open(f'downloads/{nome_arquivo_rep}') as arquivo:
             rep = arquivo.read()
             for servidor in self.servidores:

@@ -12,9 +12,9 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from datetime import datetime
 from time import sleep
 from abc import ABC
-import os
+from os import listdir, path
 
-DIRETORIO = "/home/info/Dev/coleta_online/downloads"
+DIRETORIO = path.abspath('downloads')
 
 class ColetarRegistros(ABC):
     def __init__(self, url, usuario, senha, browser):
@@ -68,7 +68,7 @@ class ColetarRegistros(ABC):
     
     def __verifica_termino_download(self):
         sleep(1)        
-        arq = os.listdir(DIRETORIO)
+        arq = listdir(DIRETORIO)
         return "*.part" in arq or "*.crdownload" in arq
     
     def __terminou_download(self):
@@ -78,7 +78,7 @@ class ColetarRegistros(ABC):
         while terminou:
             tentativas += 1
             terminou = self.__verifica_termino_download()
-            if tentativas >= 120:
+            if tentativas >= 240:
                 break
 
     def coleta_registros_registrador_henry(self):
@@ -247,5 +247,10 @@ class ChromeColeta(ColetarRegistros):
         options.add_experimental_option('prefs', preferecias)
         options.add_argument('--ignore-certificate-errors')
         options.add_argument("--start-maximized")
-        browser = Chrome(options=options)
+        # browser = Chrome(options=options)
+        browser = Remote(
+            # command_executor= 'http://127.0.0.1:4444/wd/hub',
+            desired_capabilities= DesiredCapabilities.CHROME,
+            options=options
+        )
         super().__init__(url, usuario, senha, browser)
