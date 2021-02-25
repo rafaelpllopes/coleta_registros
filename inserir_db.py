@@ -66,9 +66,7 @@ class InserirDB:
                     
                     for registro in registros:
                         registros_inserir.append((self.ponto, servidor['matricula'], f"{registro[2]}-{registro[1]}-{registro[0]} {registro[3]}:{registro[4]}"))
-                        
-        RemoveFiles.remove_one(nome_arquivo_rep)
-        
+                                
         return registros_inserir
     
     def _nome_arquivo(self, rep):  
@@ -81,14 +79,24 @@ class InserirDB:
         
         return nome_arquivo
         
+    def _obtem_mes_ano_anterior(self, mes, ano):
+        if mes == '01':
+            mes = '12'
+            ano = str(int(ano) - 1)
+            return (mes, ano)
+
+        mes = str(int(mes) - 1).zfill(2)
+        return (mes, ano)
+    
     def inserir_registros(self, mes, ano):
-        
-        registros = self._filtrar_registros(mes, ano)
-        if registros:
-            self.dao.inserir_registros(registros)
-            print(f"Registros {self.rep} inseridos com sucesso.")
-        else:
-            print(f"Não há registros para serem inseridos do registrador {self.rep}")       
+        mes_anterior, ano_anterior = self._obtem_mes_ano_anterior(mes, ano)
+        registros = [self._filtrar_registros(mes_anterior, ano_anterior), self._filtrar_registros(mes, ano)]
+        for regs in registros:                    
+            if regs:
+                self.dao.inserir_registros(regs)
+                print(f"Registros {self.rep} inseridos com sucesso .")
+            else:
+                print(f"Não há registros para serem inseridos do registrador {self.rep}")
 
 if __name__ == '__main__':
     pass
