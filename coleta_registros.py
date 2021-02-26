@@ -196,7 +196,7 @@ class ColetarRegistros(ABC):
             self.browser.execute_script(f"document.querySelector('#initial_date').value = '{periodos['inicio']}'")
             self.browser.find_element(*locator_download).click()
                     
-            sleep(5)   
+            sleep(30)   
             self.__terminou_download()
             
             self.browser.quit()
