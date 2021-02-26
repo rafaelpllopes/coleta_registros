@@ -78,7 +78,7 @@ class ColetarRegistros(ABC):
         while terminou:
             tentativas += 1
             terminou = self.__verifica_termino_download()
-            if tentativas >= 240:
+            if tentativas >= 120:
                 break
 
     def coleta_registros_registrador_henry(self):
@@ -145,6 +145,8 @@ class ColetarRegistros(ABC):
             
             botao_baixar = self.browser.find_elements(*locator_btn_baixar)
             botao_baixar[0].click()
+            
+            sleep(30)
 
             # Aguarda o termino do download
             self.__terminou_download()
