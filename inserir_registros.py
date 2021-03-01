@@ -53,5 +53,4 @@ if __name__ == '__main__':
         local = argv[1]
         inserir_por_local(local)
     except:
-        pass
         inserir_todos()
