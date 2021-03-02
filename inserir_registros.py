@@ -6,14 +6,13 @@ from inserir_db import InserirDB
 from helpers.remove_files import RemoveFiles
 from helpers.obter_nome_arquivo_rep import ObterNomeArquivoREP
 from sys import argv
+from os import listdir
+from re import search
 
-def registradores():
-    registradores = []
+registradores = []
 
-    with open('equipamentos.json', 'r') as arquivo:
-        registradores = load(arquivo)
-    
-    return registradores
+with open('equipamentos.json', 'r') as arquivo:
+    registradores = load(arquivo)
 
 def inserir_todos():
     for registrador in registradores():
@@ -31,11 +30,11 @@ def inserir_todos():
             print(error)
     
     RemoveFiles.remove_all()
-
-def inserir_por_local(local):
-    for registrador in registradores():
-        if local.lower() in registrador['local'].lower() or local == registrador['rep']:
+def inserir_por_rep(rep):
+    for registrador in registradores:
+        if rep == registrador['rep']:
             try:
+                print(registrador['local'])
                 rep = registrador['rep']
                 ponto = registrador['codigo_db']
                 inserir = InserirDB(rep, ponto)
@@ -49,12 +48,17 @@ def inserir_por_local(local):
                 RemoveFiles.remove_one(file)
             except Exception as error:
                 pass
-            
             break
                 
 if __name__ == '__main__':
     try: 
-        local = argv[1]
-        inserir_por_local(local)
+        rep = argv[1]
+        inserir_por_rep(rep)
     except:
-        inserir_todos()
+        arquivos = listdir('downloads')
+        for arquivo in arquivos:
+            rep = search(r'(\w+)?(\d{17})(\.txt)?', arquivo)
+            if rep:
+                inserir_por_rep(rep.group(2))
+            
+            
