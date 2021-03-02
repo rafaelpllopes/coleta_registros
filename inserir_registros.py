@@ -4,6 +4,7 @@ from json import load
 from datetime import date
 from inserir_db import InserirDB
 from helpers.remove_files import RemoveFiles
+from helpers.obter_nome_arquivo_rep import ObterNomeArquivoREP
 from sys import argv
 
 def registradores():
@@ -44,8 +45,11 @@ def inserir_por_local(local):
                 ano = str(data_atual.year)
                 
                 inserir.inserir_registros(mes, ano)
+                file = ObterNomeArquivoREP.nome_arquivo(rep)
+                RemoveFiles.remove_one(file)
             except Exception as error:
-                print(error)
+                pass
+            
             break
                 
 if __name__ == '__main__':

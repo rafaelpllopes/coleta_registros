@@ -3,6 +3,7 @@
 import re
 from os import listdir
 from helpers.remove_files import RemoveFiles
+from helpers.obter_nome_arquivo_rep import ObterNomeArquivoREP
 from dao import RegistradosDAO
 
 class InserirDB:
@@ -39,21 +40,17 @@ class InserirDB:
         
         return resultados
         
-    def _filtrar_registros(self, mes, ano):
+    def _filtrar_registros(self, rep, mes, ano):
+        rep_arq = f'downloads/{rep}'            
         registros_inserir = []
-        nome_arquivo_rep = self._nome_arquivo(self.rep)
-        print(nome_arquivo_rep)
         registro_existentes = self.dao.obter_registro_por_ponto_mes_ano(self.ponto, mes, ano)
         
-        if not nome_arquivo_rep:
-            print(f"{self.rep} não esta na pasta.")
-            return
-        
-        print("Filtrando os registros")
-        with open(f'downloads/{nome_arquivo_rep}') as arquivo:
+        print(f"Filtrando os registros {mes}/{ano}")
+        with open(rep_arq) as arquivo:
             rep = arquivo.read()
             for servidor in self.servidores:
-                registros = re.findall(r'(?:\d{10})(\d{2})(%s)(%s)(\d{2})(\d{2})(%s)(?:.{4})' % (mes, ano, servidor['pis']), rep)               
+                registros = re.findall(r'(?:\d{10})(\d{2})(%s)(%s)(\d{2})(\d{2})(%s)(?:.{4,})' % (mes, ano, servidor['pis']), rep)
+                
                 if registros:
                     if registro_existentes:
                         for reg in registro_existentes:
@@ -68,17 +65,7 @@ class InserirDB:
                         registros_inserir.append((self.ponto, servidor['matricula'], f"{registro[2]}-{registro[1]}-{registro[0]} {registro[3]}:{registro[4]}"))
                                 
         return registros_inserir
-    
-    def _nome_arquivo(self, rep):  
-        print(f"Verificando existencia do arquivo rep do registrador {rep}")  
-        nome_arquivo = ''
-        for arquivo in listdir('downloads'):
-            existe = re.search(r'([A-Za-z]{2,})?(%s)(.txt)$' % rep, arquivo)
-            if existe:
-                nome_arquivo = existe.group()
-        
-        return nome_arquivo
-        
+           
     def _obtem_mes_ano_anterior(self, mes, ano):
         if mes == '01':
             mes = '12'
@@ -86,17 +73,29 @@ class InserirDB:
             return (mes, ano)
 
         mes = str(int(mes) - 1).zfill(2)
-        return (mes, ano)
+        
+        return (mes, ano)  
     
     def inserir_registros(self, mes, ano):
-        mes_anterior, ano_anterior = self._obtem_mes_ano_anterior(mes, ano)
-        registros = [self._filtrar_registros(mes_anterior, ano_anterior), self._filtrar_registros(mes, ano)]
-        for regs in registros:                    
-            if regs:
-                self.dao.inserir_registros(regs)
-                print(f"Registros {self.rep} inseridos com sucesso .")
-            else:
-                print(f"Não há registros para serem inseridos do registrador {self.rep}")
+        nome_arquivo_rep = ObterNomeArquivoREP.nome_arquivo(self.rep)
+        
+        if not nome_arquivo_rep:
+            return
+        
+        ultimo_mes, ultimo_ano = self._obtem_mes_ano_anterior(mes, ano)
+        penultimo_mes, penultimo_ano = self._obtem_mes_ano_anterior(ultimo_mes, ultimo_ano)
+        
+        registros = [
+            *self._filtrar_registros(nome_arquivo_rep, penultimo_mes, penultimo_ano), 
+            *self._filtrar_registros(nome_arquivo_rep, ultimo_mes, ultimo_ano), 
+            *self._filtrar_registros(nome_arquivo_rep, mes, ano)
+        ]
+                
+        if registros:
+            self.dao.inserir_registros(registros)
+            print(f"Registros {self.rep} inseridos com sucesso .")
+        else:
+            print(f"Não há registros para serem inseridos do registrador {self.rep}")
 
 if __name__ == '__main__':
     pass
