@@ -49,7 +49,7 @@ class InserirDB:
         with open(rep_arq) as arquivo:
             rep = arquivo.read()
             for servidor in self.servidores:
-                registros = re.findall(r'(?:\d{10})(\d{2})(%s)(%s)(\d{2})(\d{2})(%s)(?:.{4,})' % (mes, ano, servidor['pis']), rep)
+                registros = re.findall(r'(?:\d{10})(\d{2})(%s)(%s)(\d{2})(\d{2})(%s)(\w+)?' % (mes, ano, servidor['pis']), rep)
                 
                 if registros:
                     if registro_existentes:
