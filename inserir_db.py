@@ -49,7 +49,7 @@ class InserirDB:
         with open(rep_arq) as arquivo:
             rep = arquivo.read()
             for servidor in self.servidores:
-                registros = re.findall(r'(?:\d{10})(\d{2})(%s)(%s)(\d{2})(\d{2})(%s)(\w+)?' % (mes, ano, servidor['pis']), rep)
+                registros = re.findall(r'(?:\d{10})(\d{2})(%s)(%s)(\d{2})(\d{2})(%s)(?:\w+)?' % (mes, ano, servidor['pis']), rep)
                 
                 if registros:
                     if registro_existentes:
@@ -63,7 +63,6 @@ class InserirDB:
                     
                     for registro in registros:
                         registros_inserir.append((self.ponto, servidor['matricula'], f"{registro[2]}-{registro[1]}-{registro[0]} {registro[3]}:{registro[4]}"))
-                                
         return registros_inserir
            
     def _obtem_mes_ano_anterior(self, mes, ano):
@@ -92,7 +91,7 @@ class InserirDB:
         ]
                 
         if registros:
-            self.dao.inserir_registros(registros)
+            # self.dao.inserir_registros(registros)
             print(f"Registros {self.rep} inseridos com sucesso .")
         else:
             print(f"Não há registros para serem inseridos do registrador {self.rep}")
