@@ -89,9 +89,9 @@ class InserirDB:
             *self._filtrar_registros(nome_arquivo_rep, ultimo_mes, ultimo_ano), 
             *self._filtrar_registros(nome_arquivo_rep, mes, ano)
         ]
-                
+            
         if registros:
-            # self.dao.inserir_registros(registros)
+            self.dao.inserir_registros(registros)
             print(f"Registros {self.rep} inseridos com sucesso .")
         else:
             print(f"Não há registros para serem inseridos do registrador {self.rep}")
