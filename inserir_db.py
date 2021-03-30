@@ -46,7 +46,7 @@ class InserirDB:
         registro_existentes = self.dao.obter_registro_por_ponto_mes_ano(self.ponto, mes, ano)
         
         print(f"Filtrando os registros {mes}/{ano}")
-        with open(rep_arq) as arquivo:
+        with open(rep_arq, encoding="UTF8") as arquivo:
             rep = arquivo.read()
             for servidor in self.servidores:
                 registros = re.findall(r'(?:\d{10})(\d{2})(%s)(%s)(\d{2})(\d{2})(%s)(?:\w+)?' % (mes, ano, servidor['pis']), rep)
