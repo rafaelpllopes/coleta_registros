@@ -56,5 +56,23 @@ class RegistradosDAO(Database):
         except Exception as erro:
             print(erro)
             
+    def obter_registros_por_mes_ano(self, periodo_incial, periodo_final):
+        try:
+            ultimo_dia_mes = UltimoDiaMes.ultimo_dia_mes(periodo_final['mes'], periodo_final['ano'])
+            sql = f"SELECT HE22_ST_MATRICULA AS matricula, HE22_DT_REGISTRO as registro, HE22_NR_EQUIP as ponto FROM HE22 WHERE HE22_DT_REGISTRO BETWEEN '{periodo_incial['ano']}-{periodo_incial['mes']}-01 00:00:00' AND '{periodo_final['ano']}-{periodo_final['mes']}-{ultimo_dia_mes} 23:59:59'"
+            dados = self.cursor.execute(sql)
+            
+            resultados = dados.fetchallmap()
+            
+            registros = []        
+            
+            for resultado in resultados:
+                registros.append({ "matricula": resultado['MATRICULA'], "ponto": resultado['PONTO'], "registro": resultado['REGISTRO'].strftime('%d/%m/%Y %H:%M') })
+                
+            return registros
+        
+        except Exception as erro:
+            print(erro)
+            
 if __name__ == '__main__':
     pass

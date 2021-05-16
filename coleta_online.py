@@ -6,11 +6,19 @@ from json import load
 import subprocess
 from datetime import date
 from helpers.remove_files import RemoveFiles
+from time import sleep
+
+def start_containers():
+    subprocess.run(['docker-compose', 'up', '-d'])
+    sleep(15)
+
+def stop_containers():
+    subprocess.run(['docker-compose', 'down'])
 
 def coletar(registradores):
     mensagem = ''
     status = False
-
+    
     for registrador in registradores:
         mensagem = f"Coletado os registros da unidade {registrador['local']}, ip {registrador['ip']}: "
     
@@ -57,6 +65,8 @@ def inserir(rep, codigo_db):
     
 def main():
     
+    start_containers()
+    
     registradores = []
 
     with open('equipamentos.json', 'r') as arquivo:
@@ -64,6 +74,8 @@ def main():
 
     coletar(registradores)
     RemoveFiles.remove_all()
+    
+    stop_containers()
 
 if __name__ == '__main__':
     main()
