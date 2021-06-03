@@ -59,8 +59,10 @@ class InserirDB:
                             dia, mes, ano = data[0].split('/')
                             hora, minuto = data[1].split(':')
                             dado_comparar = (dia.zfill(2), mes.zfill(2), ano, hora.zfill(2), minuto.zfill(2), servidor['pis'])
-                            if dado_comparar in registros:
-                                registros.remove(dado_comparar)
+                            for i in range(len(registros)):
+                                if registros[i] == dado_comparar:
+                                    registros.pop(i)
+                                    break
                     
                     for registro in registros:
                         registros_inserir.append((self.ponto, servidor['matricula'], f"{registro[2]}-{registro[1]}-{registro[0]} {registro[3]}:{registro[4]}"))
@@ -85,7 +87,7 @@ class InserirDB:
             self.dao.inserir_registros(registros)
             print(f"Registros {self.rep} inseridos com sucesso .")
         else:
-            print(f"Não há registros para serem inseridos do registrador {self.rep}")
+            print(f"Não há registros para serem inseridos do registrador {self.rep}.")
 
 if __name__ == '__main__':
     pass
