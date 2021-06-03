@@ -4,6 +4,7 @@ import re
 from os import listdir
 from helpers.remove_files import RemoveFiles
 from helpers.obter_nome_arquivo_rep import ObterNomeArquivoREP
+from helpers.obter_mes_ano_anterior import ObterUltimoMesAnoAnterior
 from dao import RegistradosDAO
 
 class InserirDB:
@@ -64,25 +65,15 @@ class InserirDB:
                     for registro in registros:
                         registros_inserir.append((self.ponto, servidor['matricula'], f"{registro[2]}-{registro[1]}-{registro[0]} {registro[3]}:{registro[4]}"))
         return registros_inserir
-           
-    def _obtem_mes_ano_anterior(self, mes, ano):
-        if mes == '01':
-            mes = '12'
-            ano = str(int(ano) - 1)
-            return (mes, ano)
-
-        mes = str(int(mes) - 1).zfill(2)
-        
-        return (mes, ano)  
-    
+       
     def inserir_registros(self, mes, ano):
         nome_arquivo_rep = ObterNomeArquivoREP.nome_arquivo(self.rep)
         
         if not nome_arquivo_rep:
             return
         
-        ultimo_mes, ultimo_ano = self._obtem_mes_ano_anterior(mes, ano)
-        penultimo_mes, penultimo_ano = self._obtem_mes_ano_anterior(ultimo_mes, ultimo_ano)
+        ultimo_mes, ultimo_ano = ObterUltimoMesAnoAnterior.obter_mes_ano_anterior(mes, ano)
+        penultimo_mes, penultimo_ano = ObterUltimoMesAnoAnterior.obter_mes_ano_anterior(ultimo_mes, ultimo_ano)
         
         registros = [
             *self._filtrar_registros(nome_arquivo_rep, penultimo_mes, penultimo_ano), 
